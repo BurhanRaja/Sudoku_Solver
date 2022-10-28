@@ -13,13 +13,12 @@
 
     <h1>Sudoku Solver</h1>
 
-    <p class="answer"></p>
-
     <div class="body-container">
         <div class="question-container">
-            <div class="title">
-                <p>Solve the Sudoku</p>
-            </div>
+                <div class="answer">
+                    <p class="wrong" style="text-align: center; padding: 10px;">Oh! Wrong Answer</p>
+                    <p class="correct" style="text-align: center; padding: 10px;">Yay! All answers are correct</p>
+                </div>
             <div class="container">
             </div>
         </div>
@@ -33,14 +32,14 @@
     </div>
 
     <div class="check-answer">
-        <button>Check above given Answers</button>
-        <button>Get full Answer Board</button>
+        <button class="check">Check above given Answers</button>
+        <button class="get">Get full Answer Board</button>
     </div>
 
     <div class="start-btn-active">
         <button>Start Solving</button>
     </div>
-    
+
 
     <script src="dist/index.js"></script>
 </body>

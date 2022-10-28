@@ -5,6 +5,25 @@
     font-family: sans-serif;
 }
 
+.wrong {
+    display: none;
+}
+.wrong-active {
+    display: block;
+    color: red;
+    font-size: 18px;
+    font-weight: 700;
+}
+.correct {
+    display: none;
+}
+.correct-active {
+    display: block;
+    color: green;
+    font-size: 18px;
+    font-weight: 700;
+}
+
 .body-container {
     display: none;
 }
