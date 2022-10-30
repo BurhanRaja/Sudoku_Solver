@@ -1,23 +1,5 @@
 // Test Arrays
-let sudoku: Array<Array<number>> = [[0, 0, 4, 5, 6, 0, 0, 0, 9],
-[0, 5, 6, 0, 0, 0, 2, 0, 3],
-[7, 8, 9, 3, 0, 4, 1, 0, 0],
-[3, 0, 0, 0, 5, 0, 0, 7, 4],
-[4, 6, 7, 0, 0, 0, 0, 2, 8],
-[0, 0, 8, 0, 0, 2, 0, 6, 1],
-[6, 2, 0, 8, 1, 0, 4, 0, 5],
-[8, 0, 1, 9, 4, 0, 6, 0, 2],
-[0, 4, 5, 0, 3, 0, 8, 1, 7]]
-
-let sudokuAnswerArray: Array<Array<number>> = [[0, 0, 4, 5, 6, 0, 0, 0, 9],
-[0, 5, 6, 0, 0, 0, 2, 0, 3],
-[7, 8, 9, 3, 0, 4, 1, 0, 0],
-[3, 0, 0, 0, 5, 0, 0, 7, 4],
-[4, 6, 7, 0, 0, 0, 0, 2, 8],
-[0, 0, 8, 0, 0, 2, 0, 6, 1],
-[6, 2, 0, 8, 1, 0, 4, 0, 5],
-[8, 0, 1, 9, 4, 0, 6, 0, 2],
-[0, 4, 5, 0, 3, 0, 8, 1, 7]]
+let sudokuAnswerArray: Array<Array<number>>;
 
 // Sudoku Board
 let boardCont = document.querySelector('.body-container')
@@ -31,12 +13,35 @@ let startBtnCont = document.querySelector('.start-btn-active')
 // To get Check and Get Answer Btn
 let answerCont = document.querySelector('.check-answer')
 
+
+// Get Board
+const getBoard = async () => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': Secrets.rapidAPI,
+            'X-RapidAPI-Host': Secrets.rapidHost
+        }
+    };
+
+    const res = await fetch('https://sudoku-board.p.rapidapi.com/new-board?diff=1&stype=list&solu=true', options)
+	.then(response => response.json())
+	.catch(err => console.error(err));
+
+    console.log(res.response["unsolved-sudoku"])
+    sudokuAnswerArray = res.response["unsolved-sudoku"]
+    console.log(sudokuAnswerArray)
+}
+
+// Calling get board
+getBoard()
+
 // To Start the Game
 startBtn?.addEventListener('click', (): void => {
     startBtnCont?.classList.remove('start-btn-active')
     startBtnCont?.classList.add('start-btn')
 
-    createBoard(sudoku.length * sudoku.length)
+    createBoard(sudokuAnswerArray.length * sudokuAnswerArray.length)
 })
 
 
@@ -60,24 +65,23 @@ const createBoard = (n: number): void => {
     let numBoard = document.querySelectorAll('.question-container-active .container div')
 
     let count: number = 0
-    for (let i = 0; i < sudoku.length && count <= n; i++) {
-        for (let j = 0; j < sudoku.length && count <= n; j++) {
-            if (sudoku[i][j] === 0) {
+    for (let i = 0; i < sudokuAnswerArray.length && count <= n; i++) {
+        for (let j = 0; j < sudokuAnswerArray.length && count <= n; j++) {
+            if (sudokuAnswerArray[i][j] === 0) {
                 numBoard[count].insertAdjacentHTML("beforeend", `<input id="${count}" type="text" />`)
             }
             else {
-                numBoard[count].insertAdjacentHTML("beforeend", `${sudoku[i][j]}`)
+                numBoard[count].insertAdjacentHTML("beforeend", `${sudokuAnswerArray[i][j]}`)
             }
             count++
         }
     }
-    getData()
+    getInputData()
 }
 
 // To get the data from input
 let inputArray: Array<number> = new Array(81).fill(0)
-
-const getData = () => {
+const getInputData = () => {
     let inputNum = document.querySelectorAll('.question-container-active .container div input')
     inputNum.forEach(inp => {
         inp.addEventListener("change", () => {
@@ -88,11 +92,11 @@ const getData = () => {
     })
 }
 
+
 // To Check the given answer
 let checkAnsBtn = document.querySelector('.check')
 let wrongAns = document.querySelector('.wrong')
 let correctAns = document.querySelector('.correct')
-
 checkAnsBtn?.addEventListener('click', () => {
     let answer: boolean = checkAns()
     if (answer) {
@@ -105,13 +109,14 @@ checkAnsBtn?.addEventListener('click', () => {
     }
 })
 
+
 // Check answer function
 const checkAns = (): boolean => {
     solve()
     let count: number = 0
-    for (let i = 0; i < sudoku.length; i++) {
+    for (let i = 0; i < sudokuAnswerArray.length; i++) {
         let flag: boolean = false
-        for (let j = 0; j < sudoku.length; j++) {
+        for (let j = 0; j < sudokuAnswerArray.length; j++) {
             if (inputArray[count] !== 0 && inputArray[count] == sudokuAnswerArray[i][j]) {
                 flag = true
                 console.log(true)
