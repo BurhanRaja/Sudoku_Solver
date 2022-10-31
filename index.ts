@@ -4,7 +4,7 @@ let sudokuAnswerArray: Array<Array<number>>;
 // Sudoku Board
 let boardCont = document.querySelector('.body-container')
 let sudokuQuestion = document.querySelector('.question-container')
-let sudokuAnswer = document.querySelector('.answer-question')
+let sudokuAnswer = document.querySelector('.answer-container')
 
 // Start Button
 let startBtn = document.querySelector('.start-btn-active button')
@@ -12,9 +12,6 @@ let startBtnCont = document.querySelector('.start-btn-active')
 
 // To get Check and Get Answer Btn
 let answerCont = document.querySelector('.check-answer')
-
-// Config
-
 
 // Get Board
 const getBoard = async () => {
@@ -130,6 +127,23 @@ checkAnsBtn?.addEventListener('click', () => {
     }
 })
 
+// To get the full Answer
+let getAnswer = document.querySelector('.get')
+let reloadBtn = document.querySelector('.reload')
+getAnswer?.addEventListener("click", () => {
+    getAns(sudokuAnswerArray.length * sudokuAnswerArray.length)
+    let gAns = <HTMLButtonElement> getAnswer
+    gAns.style.display = 'none'
+    let cAns = <HTMLButtonElement> checkAnsBtn
+    cAns.style.display = 'none'
+    reloadBtn?.classList.remove('reload')
+    reloadBtn?.classList.add('reload-active')
+})
+
+// To Get Another Board
+reloadBtn?.addEventListener("click", () => {
+    location.reload()
+})
 
 // Check answer function
 const checkAns = (): boolean => {
@@ -155,6 +169,32 @@ const checkAns = (): boolean => {
     return true
 }
 
+// Get the Answer
+const getAns = (n: number) => {
+    console.log("Hello")
+    console.log(sudokuAnswer)
+    sudokuAnswer?.classList.remove('answer-container')
+    sudokuAnswer?.classList.add('answer-container-active')
+    
+    let answerBoard = document.querySelector('.answer-container-active .container')
+    
+    solve()
+
+    let divTag = `<div></div>`
+    for (let i = 1; i <= n; i++) {
+        answerBoard?.insertAdjacentHTML('beforeend', divTag)
+    }
+    let numBoard = document.querySelectorAll('.answer-container-active .container div')
+    console.log(numBoard)
+
+    let count: number = 0
+    for (let i = 0; i < sudokuAnswerArray.length && count <= n; i++) {
+        for (let j = 0; j < sudokuAnswerArray.length && count <= n; j++) {
+            numBoard[count].insertAdjacentHTML("beforeend",`${sudokuAnswerArray[i][j]}`)
+            count++
+        }
+    }
+}
 
 // Solve Sudoku
 const solve = (): boolean => {

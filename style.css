@@ -185,6 +185,29 @@ input {
     cursor: pointer;
 }
 
+/* Reload and Get Another board */
+.reload {
+    display: none;
+}
+.reload-active {
+    display: block;
+    text-align: center;
+}
+.reload-btn {
+    padding: 20px;
+    font-size: 18px;
+    margin: 25px;
+    background-color: rgb(59, 137, 255);
+    color: white;
+    border: none;
+    transition: transform 1s ease;
+    border-radius: 5px;
+}
+
+.reload-btn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
 /* Board Selection */
 /* .choose-board-btn {
     display: none;
