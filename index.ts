@@ -13,14 +13,16 @@ let startBtnCont = document.querySelector('.start-btn-active')
 // To get Check and Get Answer Btn
 let answerCont = document.querySelector('.check-answer')
 
+// Config
+
 
 // Get Board
 const getBoard = async () => {
     const options = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': Secrets.rapidAPI,
-            'X-RapidAPI-Host': Secrets.rapidHost
+            'X-RapidAPI-Key': config.rapidAPI,
+            'X-RapidAPI-Host': config.rapidHost
         }
     };
 
@@ -28,20 +30,30 @@ const getBoard = async () => {
 	.then(response => response.json())
 	.catch(err => console.error(err));
 
-    console.log(res.response["unsolved-sudoku"])
-    sudokuAnswerArray = res.response["unsolved-sudoku"]
-    console.log(sudokuAnswerArray)
+    sudokuAnswerArray = await res.response["unsolved-sudoku"]
+    return true
 }
 
-// Calling get board
-getBoard()
+// Calling Board
+const callBoard = async () => {
+    let loading = document.querySelector('.loading-screen')
+
+    loading?.classList.remove('loading-screen')
+    loading?.classList.add('loading-screen-active')
+    
+    if (await getBoard()) {
+        loading?.classList.remove('loading-screen-active')
+        loading?.classList.add('loading-screen')
+        createBoard(sudokuAnswerArray.length * sudokuAnswerArray.length)
+    }
+}
 
 // To Start the Game
 startBtn?.addEventListener('click', (): void => {
     startBtnCont?.classList.remove('start-btn-active')
     startBtnCont?.classList.add('start-btn')
 
-    createBoard(sudokuAnswerArray.length * sudokuAnswerArray.length)
+    callBoard()
 })
 
 
@@ -102,10 +114,19 @@ checkAnsBtn?.addEventListener('click', () => {
     if (answer) {
         correctAns?.classList.remove('correct')
         correctAns?.classList.add('correct-active')
+        setTimeout(() => {
+            correctAns?.classList.remove('correct-active')
+            correctAns?.classList.add('correct')
+        }, 2000);
     }
     else {
         wrongAns?.classList.remove('wrong')
         wrongAns?.classList.add('wrong-active')
+        setTimeout(() => {
+            wrongAns?.classList.remove('wrong-active')
+            wrongAns?.classList.add('wrong')
+        }, 2000);
+
     }
 })
 
